@@ -1,0 +1,19 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.Header{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: sticky;
+}
+
+.Title {
+  font-size: 2.5rem;
+  color: #000000;
+  margin-bottom: 1rem;
+}
