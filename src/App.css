@@ -7,9 +7,12 @@
 
 .Header{
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   position: sticky;
+  top: 0;
+  z-index: 100; 
 }
 
 .Title {
@@ -28,4 +31,6 @@
 
 .card{
   display: flex;
+  flex-direction: column;
+  gap: 10px ;
 }

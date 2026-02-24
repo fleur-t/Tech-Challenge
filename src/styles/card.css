@@ -4,7 +4,6 @@
     padding: 0;
 }
 
-/* Center everything */
 body {
     background-color: #cfcfcf;
     display: flex;
@@ -13,7 +12,6 @@ body {
     height: 100vh;
 }
 
-/* Big white container */
 .board-container {
     background-color: #f2f2f2;
     width: 340px;
@@ -23,7 +21,6 @@ body {
     box-shadow: 8px 8px 12px #2C608A;
 }
 
-/* Title */
 .board-title {
     text-align: center;
     margin-bottom: 40px;
@@ -31,17 +28,13 @@ body {
     color: black;
 }
 
-/* Small task card */
 .task {
     background-color: #e0e0e0;
     padding: 20px;
     border-radius: 10px;
-
-    /* Blue shadow effect */
-    box-shadow: 0 6px 10px #2352D7;
+    width: 100%;
 }
 
-/* Header (Title + Date same row) */
 .task-header {
     display: flex;
     justify-content: space-between;
