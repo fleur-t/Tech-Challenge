@@ -44,7 +44,7 @@ body {
 
 .task h2 {
     font-size: 18px;
-    font-weight: 500;
+    font-weight: bold;
 }
 
 .task p,
@@ -66,4 +66,12 @@ body {
     gap: 40px;
     justify-content: center;
     padding: 40px;
+}
+
+.task-button{
+    background-color: transparent;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 0;
+
 }

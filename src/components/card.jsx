@@ -2,11 +2,22 @@ import { useState } from 'react';
 import '../styles/card.css';
 
 function Card() {
+
+    const [taskInfo, setTaskInfo] = useState([])
+
+    const addTaskInfo = () => {
+        const newTaskInfo = {
+            id: Date.now(),
+            title: 'New Task',
+            date: new Date().toLocaleDateString(),
+            description: 'Task description'
+        }
+        setTaskInfo([...taskInfo, newTaskInfo])
+    }
+
     return (
         <>
-        {/* <div className="board-wrapper">
-            <div className="board-container">
-                <h1 className="board-title">To Do</h1> */}
+        <button className='task-button' onClick={addTaskInfo}>
                 <div className="task">
                     <div className="task-header">
                             <h2>Title</h2>
@@ -14,8 +25,7 @@ function Card() {
                     </div>
                 <p>Discription</p>
                 </div>
-            {/* </div>
-        </div> */}
+            </button>
         </>
     )
 }
