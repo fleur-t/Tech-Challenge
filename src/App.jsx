@@ -1,9 +1,16 @@
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import './App.css'
 import Card from './components/card'
 
 function App() {
-  const [tasks, setTasks] = useState([])
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem('tasks')
+    return savedTasks ? JSON.parse(savedTasks) : []
+  })
+
+  useEffect(() => {
+  localStorage.setItem("tasks", JSON.stringify(tasks))
+}, [tasks])
 
   const addTask = () => {
     const newTask = {
