@@ -56,9 +56,8 @@ body {
     font-size: 14px;
 }
 
-.description {
-    font-size: 14px;
-    color: #333;
+p.discription {
+    display: flex !important;
 }
 
 .board-wrapper {
@@ -73,5 +72,18 @@ body {
     border-radius: 5px;
     cursor: pointer;
     padding: 0;
+}
 
+.task-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.delete-button{
+    display: flex;
+    justify-content: flex-end;
+    background-color: transparent;
+    width: 100%;
+    border: none;
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import '../styles/card.css';
 
-function Card() {
+function Card({ task, onDelete }) {
 
     const [taskInfo, setTaskInfo] = useState([])
 
@@ -21,9 +21,12 @@ function Card() {
                 <div className="task">
                     <div className="task-header">
                             <h2>Title</h2>
-                            <p>Date</p>
+                            <p className='date'>Date</p>
                     </div>
-                <p>Discription</p>
+                    <div className="task-body">
+                        <p className='discription'>Discription</p>
+                        <button className='delete-button' onClick={onDelete}>✕</button>
+                    </div>  
                 </div>
             </button>
         </>

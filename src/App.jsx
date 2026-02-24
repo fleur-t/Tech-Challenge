@@ -23,6 +23,11 @@ function App() {
     setTasks([...tasks, newTask])
   }
 
+  const deleteTask = (id) => {
+    const updatedTasks = tasks.filter(task => task.id !== id)
+    setTasks(updatedTasks)
+  }
+
   return (
     <>
       <div className="Header">
@@ -36,7 +41,11 @@ function App() {
           <h1 className="board-title">To Do</h1>
           <div className="card">
             {tasks.map(task => (
-            <Card key={task.id} task={task} />
+              <Card
+                key={task.id}
+                task={task}
+                onDelete={() => deleteTask(task.id)}
+              />
             ))}
           </div>
           </div>
