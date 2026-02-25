@@ -82,8 +82,13 @@ p.discription {
 
 .delete-button{
     display: flex;
-    justify-content: flex-end;
-    background-color: transparent;
-    width: 100%;
+    justify-content: center;
+    background-color: #1C2176;
+    width: 10px;
     border: none;
+    color: white;
+}
+
+textarea{
+    resize: none;
 }
