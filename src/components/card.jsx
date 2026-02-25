@@ -39,7 +39,7 @@ return (
                 <h2>{task.title}</h2>
                 <p className="date">
                     {task.createdAt
-                    ? new Date(task.createdAt).toLocaleDateString()
+                    ? new Date(task.createdAt).toLocaleString()
                     : "No date"}
                 </p>
                 <p className='discription'>{task.description}</p>

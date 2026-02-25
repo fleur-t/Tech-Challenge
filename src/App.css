@@ -13,6 +13,7 @@
   position: sticky;
   top: 0;
   z-index: 100; 
+  padding-bottom: 20px;
 }
 
 .Title {
@@ -21,16 +22,32 @@
   margin-bottom: 1rem;
 }
 
-/* .board-container {
+.board-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   gap: 2rem;
-} */
+}
 
 .card{
   display: flex;
   flex-direction: column;
   gap: 10px ;
+}
+
+/* Responsive design */
+
+@media screen and (max-width: 400px){
+  .board-wrapper {
+    flex-direction: column;
+    width: 100vw;
+    position: relative;
+    top: 100px;
+  }
+
+  .Header{
+    flex-direction: row;
+    gap: 80px;
+    padding-left: 10px;
+  }
 }

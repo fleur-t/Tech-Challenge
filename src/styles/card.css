@@ -23,7 +23,6 @@ body {
 
 .board-title {
     text-align: center;
-    margin-bottom: 40px;
     font-weight: 500;
     color: black;
 }
@@ -58,6 +57,8 @@ body {
 
 p.discription {
     display: flex !important;
+    line-height: normal;
+    padding-top: 5px;
 }
 
 .board-wrapper {
