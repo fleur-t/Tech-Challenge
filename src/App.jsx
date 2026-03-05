@@ -3,22 +3,15 @@ import './App.css'
 import Card from './components/card'
 
 function App() {
-  const [tasks, setTasks] = useState(() => {
-    const saved = localStorage.getItem("tasks")
-    if (!saved) return []
+  const [tasks, setTasks] = useState([])
 
-    const parsed = JSON.parse(saved)
-
-    return parsed.map(task => ({
-      ...task,
-      createdAt: task.createdAt || new Date().toISOString(),
-      status: task.status || 'todo'
-    }))
-  })
-
+  // Fetch tasks on mount
   useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks))
-  }, [tasks])
+    fetch('http://localhost:3000/tasks')
+      .then(res => res.json())
+      .then(data => setTasks(data))
+      .catch(err => console.error('Failed to fetch tasks:', err))
+  }, [])
 
   const onDragStart = (e, id) => {
     e.dataTransfer.setData("id", id);
@@ -28,42 +21,75 @@ function App() {
     e.preventDefault();
   }
 
-  const onDrop = (e, status) => {
+  const onDrop = async (e, status) => {
     let id = e.dataTransfer.getData("id");
-    let updatedTasks = tasks.map((task) => {
-      if (task.id.toString() === id) {
-        task.status = status;
+
+    // Optimistic UI update
+    const previousTasks = [...tasks];
+    setTasks(tasks.map(task =>
+      task.id.toString() === id ? { ...task, status } : task
+    ));
+
+    try {
+      const taskToUpdate = tasks.find(t => t.id.toString() === id);
+      if (taskToUpdate) {
+        await fetch(`http://localhost:3000/tasks/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...taskToUpdate, status })
+        });
       }
-      return task;
-    });
-    setTasks(updatedTasks);
-  }
-
-  const addTask = () => {
-    const newTask = {
-      id: Date.now(),
-      title: 'New Task',
-      description: 'Task description',
-      Date: new Date().toLocaleDateString(),
-      status: 'todo'
+    } catch (err) {
+      console.error(err);
+      setTasks(previousTasks); // Revert UI if error occurs
     }
-
-    setTasks([...tasks, newTask])
   }
 
-  const deleteTask = (id) => {
-    const updatedTasks = tasks.filter(task => task.id !== id)
-    setTasks(updatedTasks)
+  const addTask = async () => {
+    try {
+      const res = await fetch('http://localhost:3000/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: 'New Task',
+          description: 'Task description',
+          status: 'todo'
+        })
+      });
+      const newTask = await res.json();
+      setTasks([...tasks, newTask]);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const deleteTask = async (id) => {
+    try {
+      await fetch(`http://localhost:3000/tasks/${id}`, {
+        method: 'DELETE'
+      });
+      setTasks(tasks.filter(task => task.id !== id));
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   const [editingId, setEditingId] = useState(null)
 
-  const updateTask = (updatedTask) => {
-    setTasks(tasks.map(task =>
-      task.id === updatedTask.id
-        ? { ...updatedTask, createdAt: task.createdAt }
-        : task
-    ))
+  const updateTask = async (updatedTask) => {
+    try {
+      const res = await fetch(`http://localhost:3000/tasks/${updatedTask.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedTask)
+      });
+      const returnedTask = await res.json();
+      setTasks(tasks.map(task =>
+        task.id === returnedTask.id ? returnedTask : task
+      ));
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   const todoTasks = tasks.filter(task => task.status === 'todo');
