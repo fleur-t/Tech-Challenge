@@ -1,17 +1,45 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import Card from './components/card'
+import Auth from './components/Auth'
 
 function App() {
   const [tasks, setTasks] = useState([])
+  const [token, setToken] = useState(localStorage.getItem('token') || null)
+  const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail') || null)
 
-  // Fetch tasks on mount
+  const handleLogin = (newToken, email) => {
+    setToken(newToken);
+    setUserEmail(email);
+    localStorage.setItem('token', newToken);
+    localStorage.setItem('userEmail', email);
+  }
+
+  const handleLogout = () => {
+    setToken(null);
+    setUserEmail(null);
+    localStorage.removeItem('token');
+    localStorage.removeItem('userEmail');
+    setTasks([]);
+  }
+
+  // Fetch tasks on mount or when token changes
   useEffect(() => {
-    fetch('http://localhost:3000/tasks')
-      .then(res => res.json())
+    if (!token) return;
+
+    fetch('http://localhost:3000/tasks', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Unauthorized');
+        return res.json();
+      })
       .then(data => setTasks(data))
-      .catch(err => console.error('Failed to fetch tasks:', err))
-  }, [])
+      .catch(err => {
+        console.error('Failed to fetch tasks:', err);
+        handleLogout(); // Clear bad token
+      })
+  }, [token])
 
   const onDragStart = (e, id) => {
     e.dataTransfer.setData("id", id);
@@ -35,7 +63,10 @@ function App() {
       if (taskToUpdate) {
         await fetch(`http://localhost:3000/tasks/${id}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
           body: JSON.stringify({ ...taskToUpdate, status })
         });
       }
@@ -49,7 +80,10 @@ function App() {
     try {
       const res = await fetch('http://localhost:3000/tasks', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
           title: 'New Task',
           description: 'Task description',
@@ -66,7 +100,8 @@ function App() {
   const deleteTask = async (id) => {
     try {
       await fetch(`http://localhost:3000/tasks/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
       });
       setTasks(tasks.filter(task => task.id !== id));
     } catch (err) {
@@ -80,7 +115,10 @@ function App() {
     try {
       const res = await fetch(`http://localhost:3000/tasks/${updatedTask.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(updatedTask)
       });
       const returnedTask = await res.json();
@@ -96,12 +134,20 @@ function App() {
   const inProgressTasks = tasks.filter(task => task.status === 'in-progress');
   const doneTasks = tasks.filter(task => task.status === 'done');
 
+  if (!token) {
+    return <Auth onLogin={handleLogin} />
+  }
+
   return (
     <>
       <div className="Header">
         <h1 className='Title'>TaskLens</h1>
-        <div className="add-task">
-          <button className='add-button' onClick={addTask}>Add Task</button>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <span style={{ fontSize: '14px', color: '#555' }}>{userEmail}</span>
+          <button className='add-button' onClick={handleLogout} style={{ backgroundColor: '#cc0000' }}>Logout</button>
+          <div className="add-task">
+            <button className='add-button' onClick={addTask}>Add Task</button>
+          </div>
         </div>
       </div>
       <div className="board-wrapper">
