@@ -2,7 +2,7 @@ import { useState } from 'react';
 import '../styles/card.css';
 import '../styles/taskForm.css';
 
-function Card({ task, isEditing, startEditing, stopEditing, onUpdate, onDelete }) {
+function Card({ task, isEditing, startEditing, stopEditing, onUpdate, onDelete, onDragStart }) {
 
     const [title, setTitle] = useState(task.title)
     const [description, setDescription] = useState(task.description)
@@ -13,47 +13,52 @@ function Card({ task, isEditing, startEditing, stopEditing, onUpdate, onDelete }
             title,
             description
         })
-    stopEditing()
+        stopEditing()
     }
 
-return (
-    <div className="card">
+    return (
+        <div
+            className="card"
+            draggable
+            onDragStart={onDragStart}
+            style={{ cursor: 'grab' }}
+        >
 
-    {isEditing ? (
-        <>
-            <input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-            />
+            {isEditing ? (
+                <>
+                    <input
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
 
-            <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-            />
+                    <textarea
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
 
-            <button onClick={handleSave}>Save</button>
-        </>
-        ) : (
-        <>
-            <div  className='task'onClick={startEditing}>
-                <h2>{task.title}</h2>
-                <p className="date">
-                    {task.createdAt
-                    ? new Date(task.createdAt).toLocaleString()
-                    : "No date"}
-                </p>
-                <p className='discription'>{task.description}</p>
-            </div>
+                    <button onClick={handleSave}>Save</button>
+                </>
+            ) : (
+                <>
+                    <div className='task' onClick={startEditing}>
+                        <h2>{task.title}</h2>
+                        <p className="date">
+                            {task.createdAt
+                                ? new Date(task.createdAt).toLocaleString()
+                                : "No date"}
+                        </p>
+                        <p className='discription'>{task.description}</p>
+                    </div>
 
-        <button className='delete-button' onClick={(e) => {
-            e.stopPropagation()
-            onDelete()
-        }}>
-            ✕
-        </button>
-        </>
-    )}
-    </div>
+                    <button className='delete-button' onClick={(e) => {
+                        e.stopPropagation()
+                        onDelete()
+                    }}>
+                        ✕
+                    </button>
+                </>
+            )}
+        </div>
     )
 }
 

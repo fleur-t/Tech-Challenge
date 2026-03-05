@@ -29,10 +29,11 @@
   gap: 2rem;
 }
 
-.card{
+.card-list {
   display: flex;
   flex-direction: column;
   gap: 10px ;
+  min-height: 200px; /* Provides space to drop when empty */
 }
 
 /* Responsive design */
