@@ -25,19 +25,21 @@ function Card({ task, isEditing, startEditing, stopEditing, onUpdate, onDelete, 
         >
 
             {isEditing ? (
-                <>
+                <div className="edit-task-form">
                     <input
+                        className="edit-input"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                     />
 
                     <textarea
+                        className="edit-textarea"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                     />
 
-                    <button onClick={handleSave}>Save</button>
-                </>
+                    <button className="edit-button form-button" onClick={handleSave}>Save</button>
+                </div>
             ) : (
                 <>
                     <div className='task' onClick={startEditing}>
